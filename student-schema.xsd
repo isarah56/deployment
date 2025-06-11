@@ -1,0 +1,78 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema">
+
+  <!-- Root element: students -->
+  <xs:element name="students">
+    <xs:complexType>
+      <xs:sequence>
+        <xs:element name="student" maxOccurs="unbounded">
+          <xs:complexType>
+            <xs:sequence>
+              <!-- Student ID: Required, Alphanumeric pattern (e.g. ST001) -->
+              <xs:element name="id">
+                <xs:simpleType>
+                  <xs:restriction base="xs:string">
+                    <xs:pattern value="ST[0-9]{3}"/>
+                  </xs:restriction>
+                </xs:simpleType>
+              </xs:element>
+
+              <!-- Name: Required, min and max length -->
+              <xs:element name="name">
+                <xs:simpleType>
+                  <xs:restriction base="xs:string">
+                    <xs:minLength value="3"/>
+                    <xs:maxLength value="50"/>
+                  </xs:restriction>
+                </xs:simpleType>
+              </xs:element>
+
+              <!-- Department: Must be one of predefined options -->
+              <xs:element name="department">
+                <xs:simpleType>
+                  <xs:restriction base="xs:string">
+                    <xs:enumeration value="ICT"/>
+                    <xs:enumeration value="Horticulture"/>
+                    <xs:enumeration value="EEE"/>
+                  </xs:restriction>
+                </xs:simpleType>
+              </xs:element>
+
+              <!-- Level: Integer, must be between 1 and 5 -->
+              <xs:element name="level">
+                <xs:simpleType>
+                  <xs:restriction base="xs:int">
+                    <xs:minInclusive value="1"/>
+                    <xs:maxInclusive value="5"/>
+                  </xs:restriction>
+                </xs:simpleType>
+              </xs:element>
+
+              <!-- Status: Optional but must be one of the values if present -->
+              <xs:element name="status" minOccurs="0">
+                <xs:simpleType>
+                  <xs:restriction base="xs:string">
+                    <xs:enumeration value="active"/>
+                    <xs:enumeration value="graduated"/>
+                    <xs:enumeration value="expelled"/>
+                  </xs:restriction>
+                </xs:simpleType>
+              </xs:element>
+
+              <!-- Email: Optional, pattern for email format -->
+              <xs:element name="email" minOccurs="0">
+                <xs:simpleType>
+                  <xs:restriction base="xs:string">
+                    <xs:pattern value="[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}"/>
+                  </xs:restriction>
+                </xs:simpleType>
+              </xs:element>
+
+            </xs:sequence>
+          </xs:complexType>
+        </xs:element>
+      </xs:sequence>
+    </xs:complexType>
+  </xs:element>
+
+</xs:schema>

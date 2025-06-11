@@ -1,0 +1,15 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "type": "object",
+  "required": ["student_id", "full_name", "department", "level", "email", "status"],
+  "properties": {
+    "student_id": { "type": "string" },
+    "full_name": { "type": "string" },
+    "department": { "type": "string", "enum": ["ICT", "Horticulture", "EEE"] },
+    "level": { "type": "integer", "minimum": 1, "maximum": 5 },
+    "email": { "type": "string", "format": "email" },
+    "status": { "type": "string", "enum": ["active", "expelled", "graduated"] }
+  }
+}
+
+

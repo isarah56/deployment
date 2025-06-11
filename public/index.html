@@ -1,0 +1,374 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Student MIS - IPRC Karongi</title>
+<style>
+
+  /* Base Layout */
+  * {
+    box-sizing: border-box;
+  }
+
+  body {
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    padding: 20px;
+    margin: 0;
+    background-color: #f9f9f9;
+    color: #333;
+  }
+
+  h2, h3 {
+    color: #2c3e50;
+  }
+
+  /* Form Styling */
+  form {
+    background-color: #fff;
+    padding: 20px;
+    border-radius: 10px;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+    max-width: 600px;
+    margin-bottom: 30px;
+    width: 100%;
+  }
+
+  form label {
+    display: block;
+    margin-bottom: 12px;
+    font-weight: 500;
+  }
+
+  form input,
+  form select {
+    width: 100%;
+    padding: 10px;
+    margin-top: 4px;
+    border: 1px solid #ccc;
+    border-radius: 6px;
+  }
+
+  form button {
+    background-color: #3498db;
+    color: white;
+    border: none;
+    padding: 12px 20px;
+    margin-top: 10px;
+    border-radius: 6px;
+    cursor: pointer;
+    transition: background-color 0.3s;
+    width: 100%;
+  }
+
+  form button:hover {
+    background-color: #2980b9;
+  }
+
+  .error {
+    color: #e74c3c;
+    font-weight: bold;
+  }
+
+  /* Table Styling */
+  table {
+    width: 100%;
+    border-collapse: collapse;
+    background-color: #fff;
+    border-radius: 10px;
+    overflow: hidden;
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.05);
+    margin-bottom: 20px;
+  }
+
+  th, td {
+    padding: 12px 16px;
+    text-align: left;
+    border-bottom: 1px solid #eee;
+  }
+
+  th {
+    background-color: #ecf0f1;
+    font-weight: 600;
+  }
+
+  tr:hover {
+    background-color: #f1f1f1;
+  }
+
+  /* Buttons in Table */
+  table button {
+    padding: 6px 12px;
+    margin-right: 6px;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+    font-weight: bold;
+    transition: 0.2s;
+  }
+
+  button[onclick*="promoteStudent"] {
+    background-color: #27ae60;
+    color: white;
+  }
+
+  button[onclick*="promoteStudent"]:hover {
+    background-color: #1e8449;
+  }
+
+  button[onclick*="expelStudent"] {
+    background-color: #e74c3c;
+    color: white;
+  }
+
+  button[onclick*="expelStudent"]:hover {
+    background-color: #c0392b;
+  }
+
+  /* Search and Export */
+  #search {
+    padding: 10px;
+    width: 100%;
+    max-width: 400px;
+    border: 1px solid #ccc;
+    border-radius: 6px;
+    margin-bottom: 15px;
+  }
+
+  button[onclick*="exportToXML"] {
+    background-color: #8e44ad;
+    color: white;
+    padding: 10px 20px;
+    border-radius: 6px;
+    border: none;
+    cursor: pointer;
+  }
+
+  button[onclick*="exportToXML"]:hover {
+    background-color: #71368a;
+  }
+
+  /* Responsive Design */
+  @media (max-width: 768px) {
+    body {
+      padding: 15px;
+    }
+
+    form {
+      padding: 15px;
+    }
+
+    table, thead, tbody, th, td, tr {
+      display: block;
+      width: 100%;
+    }
+
+    thead {
+      display: none;
+    }
+
+    tr {
+      margin-bottom: 15px;
+      background: #fff;
+      box-shadow: 0 1px 3px rgba(0,0,0,0.05);
+      padding: 10px;
+      border-radius: 8px;
+    }
+
+    td {
+      display: flex;
+      justify-content: space-between;
+      padding: 10px 5px;
+      border: none;
+      border-bottom: 1px solid #eee;
+    }
+
+    td::before {
+      content: attr(data-label);
+      font-weight: bold;
+      color: #555;
+    }
+
+    table button {
+      margin: 6px 0;
+      width: 48%;
+    }
+  }
+</style>
+</head>
+<body>
+  <h2>Student Management System - Nyamishaba Campus</h2>
+  <form id="registerForm">
+    <label>Student ID:
+      <input type="text" id="student_id" required>
+    </label><br>
+    <label>Full Name:
+      <input type="text" id="full_name" required>
+    </label><br>
+    <label>Department:
+      <select id="department" required>
+        <option value="">Select department</option>
+        <option value="ICT">ICT</option>
+        <option value="Horticulture">Horticulture</option>
+        <option value="EEE">EEE</option>
+      </select>
+    </label><br>
+    <label>Level:
+      <input type="number" id="level" min="1" max="5" required>
+    </label><br>
+    <label>Email:
+      <input type="email" id="email" required>
+    </label><br>
+    <label>Status:
+      <select id="status" required>
+        <option value="">Select status</option>
+        <option value="active">Active</option>
+        <option value="graduated">Graduated</option>
+        <option value="expelled">Expelled</option>
+      </select>
+    </label><br>
+    <button type="submit">Register Student</button>
+  </form>
+  <p class="error" id="error"></p>
+
+  <h3>Students</h3>
+  <input type="text" id="search" placeholder="Search by department...">
+  <table>
+     <thead>
+      <tr>
+        <th>ID</th><th>Name</th><th>Department</th><th>Level</th><th>Status</th><th>Actions</th>
+      </tr>
+    </thead>
+    <tbody id="studentTable"></tbody>
+  </table>
+  <button onclick="exportToXML()">Export to XML</button>
+
+  <script>
+    const API_URL = '/students';
+
+    document.addEventListener('DOMContentLoaded', () => {
+
+      async function loadStudents(filter = '') {
+        const res = await fetch(API_URL + filter);
+        const students = await res.json();
+        const tbody = document.getElementById('studentTable');
+        tbody.innerHTML = '';
+        students.forEach(s => {
+          const tr = document.createElement('tr');
+          tr.innerHTML = `
+            <td data-label="ID">${s.student_id}</td>
+            <td data-label="Name">${s.full_name}</td>
+            <td data-label="Department">${s.department}</td>
+            <td data-label="Level">${s.level}</td>
+            <td data-label="Status">${s.status}</td>
+            <td data-label="Actions">
+              <button onclick="promoteStudent('${s.id}', ${s.level})">Promote</button>
+              <button onclick="expelStudent('${s.id}')">Expel</button>
+            </td>`;
+          tbody.appendChild(tr);
+        });
+      }
+
+      window.promoteStudent = async function(id, currentLevel) {
+        const res = await fetch(`${API_URL}/${id}`);
+        const student = await res.json();
+        const updated = { ...student, level: currentLevel + 1 };
+        await fetch(`${API_URL}/${id}`, {
+          method: 'PUT',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify(updated)
+        });
+        loadStudents();
+      }
+
+      window.expelStudent = async function(id) {
+        const res = await fetch(`${API_URL}/${id}`);
+        const student = await res.json();
+        const updated = { ...student, status: 'expelled' };
+        await fetch(`${API_URL}/${id}`, {
+          method: 'PUT',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify(updated)
+        });
+        loadStudents();
+      }
+
+      window.exportToXML = function () {
+        fetch(API_URL)
+          .then(res => res.json())
+          .then(students => {
+            let xml = `<?xml version="1.0" encoding="UTF-8"?>\n`;
+            xml += `<students xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="students.xsd">\n`;
+            students.forEach(s => {
+              xml += `  <student>\n`;
+              xml += `    <id>${s.student_id}</id>\n`;
+              xml += `    <name>${s.full_name}</name>\n`;
+              xml += `    <department>${s.department}</department>\n`;
+              xml += `    <level>${s.level}</level>\n`;
+              xml += `    <status>${s.status}</status>\n`;
+              xml += `    <email>${s.email}</email>\n`;
+              xml += `  </student>\n`;
+            });
+            xml += `</students>`;
+            const blob = new Blob([xml], { type: 'application/xml' });
+            const link = document.createElement('a');
+            link.href = URL.createObjectURL(blob);
+            link.download = 'students.xml';
+            link.click();
+          });
+      }
+
+      document.getElementById('registerForm').addEventListener('submit', async function(e) {
+        e.preventDefault();
+        const errorEl = document.getElementById('error');
+        errorEl.textContent = '';
+
+        const student = {
+          student_id: document.getElementById('student_id').value.trim(),
+          full_name: document.getElementById('full_name').value.trim(),
+          department: document.getElementById('department').value,
+          level: parseInt(document.getElementById('level').value),
+          email: document.getElementById('email').value.trim(),
+          status: document.getElementById('status').value
+        };
+
+        if (!student.student_id || !student.full_name || !student.department || !student.status) {
+          return errorEl.textContent = 'All fields are required.';
+        }
+
+        if (!validateEmail(student.email)) {
+          return errorEl.textContent = 'Invalid email address.';
+        }
+
+        if (student.level < 1 || student.level > 5) {
+          return errorEl.textContent = 'Level must be between 1 and 5.';
+        }
+
+        try {
+          const res = await fetch(API_URL, {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify(student)
+          });
+          if (!res.ok) throw new Error('Failed to register student');
+          document.getElementById('registerForm').reset();
+          loadStudents();
+        } catch (err) {
+          errorEl.textContent = 'Error: ' + err.message;
+        }
+      });
+
+      document.getElementById('search').addEventListener('input', function() {
+        const dept = this.value.trim();
+        loadStudents(dept ? `?department=${dept}` : '');
+      });
+
+      loadStudents(); // Initial load
+    });
+
+    function validateEmail(email) {
+      return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email);
+    }
+  </script>
+</body>
+</html>
